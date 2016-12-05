@@ -8,6 +8,27 @@
 	
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
+		<!-- MAVEN PLUGIN VERSIONS -->
+		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+		<maven-resources-plugin.version>2.5</maven-resources-plugin.version>
+		<properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
+		<exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
+		
+		<!-- SENCHA CONFIGURATION -->
+		<!--
+			Define the package name
+		<sencha.package.name></sencha.package.name>
+		-->
+		
+		<!-- SENCHA CONFIGURATION (loaded from "sencha.properties") -->
+		<!--
+			Sencha CMD (version 6) path in which to find CMD executable (loaded from "sencha.properties")
+		<sencha.cmd.v6></sencha.cmd.v6>
+		
+			Path of the workspace (loaded from "sencha.properties")
+		<sencha.workspace></sencha.workspace>
+		-->
     </properties>
 	
 	<build>
@@ -27,6 +48,26 @@
 		</resources>
 		
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>${properties-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>read-properties</id>
+						<phase>none</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${user.home}/.m2/sencha.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
 			<!--
 			<plugin>
 				<groupId>com.pyx4j</groupId>
@@ -69,19 +110,20 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
+				<version>${maven-antrun-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>sencha-package-build</id>
+						<phase>none</phase>
 						<goals>
 							<goal>run</goal>
 						</goals>
-						<phase>none</phase>
 						<configuration>
 							<target>
-								<taskdef resource="com/sencha/ant/antlib.xml" classpath="${env.SENCHA_CMD_6}/sencha.jar" loaderref="senchaloader" />
-								<x-sencha-init dir="${env.SENCHA_WORKSPACE}/packages/local/${sencha.package.name}"/>
-								<x-sencha-command dir="${env.SENCHA_WORKSPACE}/packages/local/${sencha.package.name}">
+								<property name="cmd.dir" value="${sencha.cmd.v6}"/>
+								<taskdef resource="com/sencha/ant/antlib.xml" classpath="${sencha.cmd.v6}/sencha.jar" loaderref="senchaloader" />
+								<x-sencha-init dir="${sencha.workspace}/packages/local/${sencha.package.name}"/>
+								<x-sencha-command dir="${sencha.workspace}/packages/local/${sencha.package.name}">
 									package
 									build
 								</x-sencha-command>
@@ -93,14 +135,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
+				<version>${maven-resources-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>copy-sencha-build</id>
+						<phase>none</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
-						<phase>none</phase>
 						<configuration>
 							<outputDirectory>${project.build.outputDirectory}/client/extjs/packages/${sencha.package.name}</outputDirectory>
 							<resources>
@@ -112,10 +154,10 @@
 					</execution>
 					<execution>
 						<id>copy-src</id>
+						<phase>none</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
-						<phase>none</phase>
 						<configuration>
 							<outputDirectory>${project.build.outputDirectory}/client/extjs/packages/${sencha.package.name}/src</outputDirectory>
 							<resources>
@@ -137,10 +179,10 @@
 				<executions>
 					<execution>
 						<id>clean-sencha-build</id>
+						<phase>none</phase>
 						<goals>
 							<goal>clean</goal>
 						</goals>
-						<phase>none</phase>
 						<configuration>
 							<excludeDefaultDirectories>true</excludeDefaultDirectories>
 							<filesets>
@@ -157,7 +199,7 @@
 	
 	<profiles>
 		<profile>
-			<id>development</id>
+			<id>profile-development</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
@@ -166,6 +208,17 @@
 			</properties>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>properties-maven-plugin</artifactId>
+						<version>${properties-maven-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>read-properties</id>
+								<phase>validate</phase>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<artifactId>maven-antrun-plugin</artifactId>
 						<executions>
@@ -202,7 +255,7 @@
 		</profile>
 		
 		<profile>
-			<id>production</id>
+			<id>profile-production</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
@@ -211,6 +264,17 @@
 			</properties>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>properties-maven-plugin</artifactId>
+						<version>${properties-maven-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>read-properties</id>
+								<phase>validate</phase>
+							</execution>
+						</executions>
+					</plugin>
 					<!--
 					<plugin>
 						<artifactId>maven-junction-plugin</artifactId>
