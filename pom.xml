@@ -121,6 +121,7 @@
 						<configuration>
 							<target>
 								<property name="cmd.dir" value="${sencha.cmd.v6}"/>
+								<echo>Using workspace folder: ${sencha.workspace}</echo>
 								<taskdef resource="com/sencha/ant/antlib.xml" classpath="${sencha.cmd.v6}/sencha.jar" loaderref="senchaloader" />
 								<x-sencha-init dir="${sencha.workspace}/packages/local/${sencha.package.name}"/>
 								<x-sencha-command dir="${sencha.workspace}/packages/local/${sencha.package.name}">
