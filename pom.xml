@@ -10,9 +10,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
 		<!-- MAVEN PLUGIN VERSIONS -->
-		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
 		<maven-resources-plugin.version>2.5</maven-resources-plugin.version>
 		<properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
+		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
 		<exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
 		
 		<!-- SENCHA CONFIGURATION -->
