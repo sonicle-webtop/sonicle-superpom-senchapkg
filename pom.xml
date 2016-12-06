@@ -67,7 +67,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			
 			<!--
 			<plugin>
 				<groupId>com.pyx4j</groupId>
@@ -108,6 +107,48 @@
 			</plugin>
 			-->
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${exec-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>sencha-package-build-sass-only</id>
+						<phase>none</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${sencha.cmd.v6}/sencha</executable>
+							<workingDirectory>${sencha.workspace}/packages/local/${sencha.package.name}</workingDirectory>
+							<arguments>
+								<argument>config</argument>
+								<argument>-prop</argument>
+								<argument>skip.js=true</argument>
+								<argument>then</argument>
+								<argument>package</argument>
+								<argument>build</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>sencha-package-build</id>
+						<phase>none</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${sencha.cmd.v6}/sencha</executable>
+							<workingDirectory>${sencha.workspace}/packages/local/${sencha.package.name}</workingDirectory>
+							<arguments>
+								<argument>package</argument>
+								<argument>build</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>${maven-antrun-plugin.version}</version>
@@ -121,6 +162,7 @@
 						<configuration>
 							<target>
 								<property name="cmd.dir" value="${sencha.cmd.v6}"/>
+								<echo>Local repo: ${settings.localRepository}</echo>
 								<echo>Using workspace folder: ${sencha.workspace}</echo>
 								<taskdef resource="com/sencha/ant/antlib.xml" classpath="${sencha.cmd.v6}/sencha.jar" loaderref="senchaloader" />
 								<x-sencha-init dir="${sencha.workspace}/packages/local/${sencha.package.name}"/>
@@ -133,6 +175,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -226,9 +269,11 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
+			<!--
 			<properties>
 				<skip.js>1</skip.js>
 			</properties>
+			-->
 			<build>
 				<plugins>
 					<plugin>
@@ -243,16 +288,31 @@
 						</executions>
 					</plugin>
 					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>${exec-maven-plugin.version}</version>
 						<executions>
 							<execution>
-								<id>sencha-package-build</id>
+								<id>sencha-package-build-sass-only</id>
 								<phase>compile</phase>
 							</execution>
 						</executions>
 					</plugin>
+					<!--
 					<plugin>
+						<artifactId>maven-junction-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sencha-package-link</id>
+								<phase>initialize</phase>
+							</execution>
+						</executions>
+					</plugin>
+					-->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-resources-plugin</artifactId>
+						<version>${maven-resources-plugin.version}</version>
 						<executions>
 							<execution>
 								<id>copy-sencha-build</id>
@@ -282,9 +342,11 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
+			<!--
 			<properties>
 				<skip.js>0</skip.js>
 			</properties>
+			-->
 			<build>
 				<plugins>
 					<plugin>
@@ -310,6 +372,17 @@
 					</plugin>
 					-->
 					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sencha-package-build</id>
+								<phase>compile</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<!--
+					<plugin>
 						<artifactId>maven-antrun-plugin</artifactId>
 						<executions>
 							<execution>
@@ -318,6 +391,7 @@
 							</execution>
 						</executions>
 					</plugin>
+					-->
 					<plugin>
 						<artifactId>maven-resources-plugin</artifactId>
 						<executions>
