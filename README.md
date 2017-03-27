@@ -1,6 +1,6 @@
-# Sonicle SuperPOM (Sencha package)
+# Super POM (Sencha package)
 
-Parent POM file for building Ext JS packages
+Parent POM file for a Ext JS package project
 
 [![License](https://img.shields.io/badge/license-AGPLv3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.txt)
 
