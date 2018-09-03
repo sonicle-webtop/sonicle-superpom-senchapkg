@@ -45,6 +45,12 @@
 					<exclude>**/*</exclude>
 				</excludes>
 			</resource>
+			<resource>
+				<directory>src/sencha/${sencha.package.name}/resources</directory>
+				<excludes>
+					<exclude>**/*</exclude>
+				</excludes>
+			</resource>
 		</resources>
 		
 		<plugins>
