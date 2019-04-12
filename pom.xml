@@ -40,6 +40,12 @@
 				</excludes>
 			</resource>
 			<resource>
+				<directory>src/sencha/${sencha.package.name}/overrides</directory>
+				<excludes>
+					<exclude>**/*</exclude>
+				</excludes>
+			</resource>
+			<resource>
 				<directory>src/sencha/${sencha.package.name}/sass/src</directory>
 				<excludes>
 					<exclude>**/*</exclude>
@@ -73,6 +79,27 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!--
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>sencha-package-link</id>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<phase>none</phase>
+						<configuration>
+							<target>
+								<symlink link="${sencha.workspace}/packages/local/${sencha.package.name}" resource="${basedir}/src/sencha/${sencha.package.name}" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			-->
 			<!--
 			<plugin>
 				<groupId>com.pyx4j</groupId>
@@ -146,6 +173,9 @@
 							<executable>${sencha.cmd.v6}/sencha</executable>
 							<workingDirectory>${sencha.workspace}/packages/local/${sencha.package.name}</workingDirectory>
 							<arguments>
+								<argument>diag</argument>
+								<argument>show-prop</argument>
+								<argument>then</argument>
 								<argument>package</argument>
 								<argument>build</argument>
 							</arguments>
