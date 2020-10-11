@@ -17,16 +17,16 @@
 		
 		<!-- SENCHA -->
 		<!--
-			Define the package name
-		<sencha.package.name></sencha.package.name>
+			Defines the target properties file to load
 		-->
+		<sencha.properties.target>sencha</sencha.properties.target>
 		
-		<!-- SENCHA: integration (loaded from "sencha.properties") -->
+		<!-- SENCHA: integration (loaded from properties file at "{sencha.properties.target}.properties") -->
 		<!--
-			Sencha CMD (version 6) path in which to find CMD executable (loaded from "sencha.properties")
-		<sencha.cmd.v6></sencha.cmd.v6>
+			Sencha CMD path in which to find CMD executable (loaded from target properties file)
+		<sencha.cmd></sencha.cmd> or deprecated <sencha.cmd.v6></sencha.cmd.v6>
 		
-			Path of the workspace (loaded from "sencha.properties")
+			Path of the workspace (loaded from target properties file)
 		<sencha.workspace></sencha.workspace>
 		-->
     </properties>
@@ -73,12 +73,44 @@
 						</goals>
 						<configuration>
 							<files>
-								<file>${user.home}/.m2/sencha.properties</file>
+								<file>${user.home}/.m2/${sencha.properties.target}.properties</file>
 							</files>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven-antrun-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>build-properties</id>
+						<phase>none</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<exportAntProperties>true</exportAntProperties>
+							<target>
+								<echo>Evaluating deprecated properties</echo>
+								<script language="javascript">
+								<![CDATA[
+									var value = project.getProperty('sencha.cmd.v6');
+									if (value !== null && value.trim() !== '') {
+										project.setProperty('sencha.cmd', value);
+									}
+								]]>
+								</script>
+								<!--
+								<echo>sencha.cmd: ${sencha.cmd}</echo>
+								-->
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
 			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -151,7 +183,7 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>${sencha.cmd.v6}/sencha</executable>
+							<executable>${sencha.cmd}/sencha</executable>
 							<workingDirectory>${sencha.workspace}/packages/local/${sencha.package.name}</workingDirectory>
 							<arguments>
 								<argument>config</argument>
@@ -170,7 +202,7 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>${sencha.cmd.v6}/sencha</executable>
+							<executable>${sencha.cmd}/sencha</executable>
 							<workingDirectory>${sencha.workspace}/packages/local/${sencha.package.name}</workingDirectory>
 							<arguments>
 								<argument>diag</argument>
@@ -197,10 +229,10 @@
 						</goals>
 						<configuration>
 							<target>
-								<property name="cmd.dir" value="${sencha.cmd.v6}"/>
+								<property name="cmd.dir" value="${sencha.cmd}"/>
 								<echo>Local repo: ${settings.localRepository}</echo>
 								<echo>Using workspace folder: ${sencha.workspace}</echo>
-								<taskdef resource="com/sencha/ant/antlib.xml" classpath="${sencha.cmd.v6}/sencha.jar" loaderref="senchaloader" />
+								<taskdef resource="com/sencha/ant/antlib.xml" classpath="${sencha.cmd}/sencha.jar" loaderref="senchaloader" />
 								<x-sencha-init dir="${sencha.workspace}/packages/local/${sencha.package.name}"/>
 								<x-sencha-command dir="${sencha.workspace}/packages/local/${sencha.package.name}">
 									package
@@ -324,6 +356,17 @@
 						</executions>
 					</plugin>
 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>${maven-antrun-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>build-properties</id>
+								<phase>validate</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
 						<version>${exec-maven-plugin.version}</version>
@@ -396,6 +439,18 @@
 							</execution>
 						</executions>
 					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>${maven-antrun-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>build-properties</id>
+								<phase>validate</phase>
+							</execution>
+						</executions>
+					</plugin>
+					
 					<!--
 					<plugin>
 						<artifactId>maven-junction-plugin</artifactId>
