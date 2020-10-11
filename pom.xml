@@ -29,6 +29,11 @@
 			Path of the workspace (loaded from target properties file)
 		<sencha.workspace></sencha.workspace>
 		-->
+		
+		<!--
+			Define the package name
+		<sencha.package.name></sencha.package.name>
+		-->
     </properties>
 	
 	<build>
