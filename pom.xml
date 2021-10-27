@@ -107,75 +107,38 @@
 									}
 								]]>
 								</script>
+								<condition property="symlink.exists">
+									<available file="${sencha.workspace}/packages/local/${sencha.package.name}" type="dir"/>
+								</condition>
 								<!--
 								<echo>sencha.cmd: ${sencha.cmd}</echo>
 								-->
 							</target>
 						</configuration>
 					</execution>
-				</executions>
-			</plugin>
-			
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
 					<execution>
-						<id>sencha-package-link</id>
+						<id>sencha-package-createlink</id>
 						<goals>
 							<goal>run</goal>
 						</goals>
 						<phase>none</phase>
 						<configuration>
+							<exportAntProperties>true</exportAntProperties>
+							<skip>${symlink.exists}</skip>
 							<target>
-								<symlink link="${sencha.workspace}/packages/local/${sencha.package.name}" resource="${basedir}/src/sencha/${sencha.package.name}" />
+								<echo message="Creating symlink to workspace package" />
+								<exec executable="cmd" osfamily="windows">
+									<arg value="/c"/>
+									<arg value="mklink /D &quot;${sencha.workspace}/packages/local/${sencha.package.name}&quot; &quot;${basedir}/src/sencha/${sencha.package.name}&quot;"/>
+								</exec>
+								<exec executable="ln" osfamily="unix">
+									<arg value="-s &quot;${sencha.workspace}/packages/local/${sencha.package.name}&quot; &quot;${basedir}/src/sencha/${sencha.package.name}&quot;"/>
+								</exec>
 							</target>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			-->
-			<!--
-			<plugin>
-				<groupId>com.pyx4j</groupId>
-				<artifactId>maven-junction-plugin</artifactId>
-				<version>1.0.3</version>
-				<executions>
-					<execution>
-						<id>sencha-package-link</id>
-						<goals>
-							<goal>link</goal>
-						</goals>
-						<phase>none</phase>
-						<configuration>
-							<links>
-								<link>
-									<src>src/sencha/${sencha.package.name}</src>
-									<dst>${env.SENCHA_WORKSPACE}/packages/local/${sencha.package.name}</dst>
-								</link>
-							</links>
-						</configuration>
-					</execution>
-					<execution>
-						<id>sencha-package-unlink</id>
-						<goals>
-							<goal>unlink</goal>
-						</goals>
-						<phase>none</phase>
-						<configuration>
-							<links>
-								<link>
-									<src>src/sencha/${sencha.package.name}</src>
-									<dst>${env.SENCHA_WORKSPACE}/packages/local/${sencha.package.name}</dst>
-								</link>
-							</links>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			-->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -369,6 +332,10 @@
 								<id>build-properties</id>
 								<phase>validate</phase>
 							</execution>
+							<execution>
+								<id>sencha-package-createlink</id>
+								<phase>initialize</phase>
+							</execution>
 						</executions>
 					</plugin>
 					<plugin>
@@ -382,17 +349,6 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!--
-					<plugin>
-						<artifactId>maven-junction-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>sencha-package-link</id>
-								<phase>initialize</phase>
-							</execution>
-						</executions>
-					</plugin>
-					-->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-resources-plugin</artifactId>
@@ -453,20 +409,12 @@
 								<id>build-properties</id>
 								<phase>validate</phase>
 							</execution>
-						</executions>
-					</plugin>
-					
-					<!--
-					<plugin>
-						<artifactId>maven-junction-plugin</artifactId>
-						<executions>
 							<execution>
-								<id>sencha-package-link</id>
+								<id>sencha-package-createlink</id>
 								<phase>initialize</phase>
 							</execution>
 						</executions>
 					</plugin>
-					-->
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
