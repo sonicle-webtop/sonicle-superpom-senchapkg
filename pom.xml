@@ -238,7 +238,7 @@
 							<executable>${sencha.cmd}/${sencha.cmd.exec}</executable>
 							<workingDirectory>${sencha.workspace}/packages/local/${sencha.package.name}</workingDirectory>
 							<arguments>
-								<argument>${sencha.cmd.args}</argument>
+								<argument>${sencha.cmd.exec.args}</argument>
 								<argument>config</argument>
 								<argument>-prop</argument>
 								<argument>skip.js=true</argument>
@@ -258,7 +258,7 @@
 							<executable>${sencha.cmd}/${sencha.cmd.exec}</executable>
 							<workingDirectory>${sencha.workspace}/packages/local/${sencha.package.name}</workingDirectory>
 							<arguments>
-								<argument>${sencha.cmd.args}</argument>
+								<argument>${sencha.cmd.exec.args}</argument>
 								<argument>diag</argument>
 								<argument>show-prop</argument>
 								<argument>then</argument>
