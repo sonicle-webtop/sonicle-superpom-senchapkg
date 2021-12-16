@@ -125,6 +125,7 @@
 									</else>
 								</if>
 								<echo>Using:</echo>
+								<echo>sencha.properties.target: ${sencha.properties.target}</echo>
 								<echo>sencha.cmd: ${sencha.cmd}</echo>
 								<echo>sencha.workspace: ${sencha.workspace}</echo>
 								<echo>sencha.cmd.exec: ${sencha.cmd.exec}</echo>
