@@ -314,7 +314,7 @@
 							<outputDirectory>${project.build.outputDirectory}/client/extjs/packages/${sencha.package.name}</outputDirectory>
 							<resources>
 								<resource>
-									<directory>src/sencha/${sencha.package.name}/build</directory>
+									<directory>${sencha.workspace}/packages/local/${sencha.package.name}/build</directory>
 								</resource>
 							</resources>
 						</configuration>
